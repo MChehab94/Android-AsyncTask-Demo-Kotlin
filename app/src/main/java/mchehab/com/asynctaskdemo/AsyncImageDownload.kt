@@ -35,12 +35,11 @@ class AsyncImageDownload(private val applicationContext: WeakReference<Context>,
 
     override fun onPostExecute(bitmap: Bitmap?) {
         var imagePath = ""
-        bitmap.let {
-            imagePath = Util.saveToInternalStorage("image", bitmap!!, applicationContext
-                    .get()!!)
+        if(bitmap != null){
+            imagePath = Util.saveToInternalStorage("image", bitmap, applicationContext.get()!!)
+            val intent = Intent(broadcastIntent)
+            intent.putExtra("image", imagePath)
+            LocalBroadcastManager.getInstance(applicationContext.get()).sendBroadcast(intent)
         }
-        val intent = Intent(broadcastIntent)
-        intent.putExtra("image", imagePath)
-        LocalBroadcastManager.getInstance(applicationContext.get()).sendBroadcast(intent)
     }
 }

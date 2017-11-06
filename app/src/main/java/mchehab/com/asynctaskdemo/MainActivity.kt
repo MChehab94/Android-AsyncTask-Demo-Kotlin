@@ -148,7 +148,7 @@ class MainActivity : BaseNetworkActivity(){
                 jsonObjectForm.put("form", jsonObject)
 
                 AsyncTaskPost(WeakReference(this), jsonObjectForm.toString(),
-                        "post json").execute("https://httpbin.org/post")
+                        "post json").execute(POST_URL)
 
             } catch (jsonException: JSONException) {
                 jsonException.printStackTrace()

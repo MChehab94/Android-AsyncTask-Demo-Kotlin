@@ -11,15 +11,19 @@ import java.net.URL
 /**
  * Created by muhammadchehab on 10/31/17.
  */
-class GetJSON(val applicationContext: WeakReference<Context>, val broadcastIntent: String) :
+class GetJSON(val applicationContext: WeakReference<Context>, val broadcastIntent: String, val
+httpMethod: String?="GET", val postData: String?="") :
         AsyncTask<String, Int, String>() {
 
     override fun doInBackground(vararg params: String?): String {
         try {
             val url = URL(params[0])
             val httpURLConnection = url.openConnection() as HttpURLConnection
-            httpURLConnection.requestMethod = "GET"
+            httpURLConnection.requestMethod = httpMethod
             httpURLConnection.connect()
+            if(httpMethod.equals("POST")){
+                httpURLConnection.outputStream.bufferedWriter().use { it.write(postData); it.flush() }
+            }
 
             val result = httpURLConnection.inputStream.bufferedReader().readText()
             return result

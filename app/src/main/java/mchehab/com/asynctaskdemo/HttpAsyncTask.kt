@@ -11,7 +11,7 @@ import java.net.URL
 /**
  * Created by muhammadchehab on 10/31/17.
  */
-class GetJSON(val applicationContext: WeakReference<Context>, val broadcastIntent: String, val
+class HttpAsyncTask(val applicationContext: WeakReference<Context>, val broadcastIntent: String, val
 httpMethod: String?="GET", val postData: String?="") :
         AsyncTask<String, Int, String>() {
 

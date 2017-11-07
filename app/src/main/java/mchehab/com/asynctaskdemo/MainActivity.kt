@@ -21,7 +21,7 @@ class MainActivity : BaseNetworkActivity(){
     lateinit var imageView: ImageView
     lateinit var progressBar: ProgressBar
 
-    var getJSON: GetJSON? = null
+    var getJSON: HttpAsyncTask? = null
     var asyncImageDownload: AsyncImageDownload? = null
 
     val URL = "http://httpbin.org/get"
@@ -115,7 +115,7 @@ class MainActivity : BaseNetworkActivity(){
     private fun executeGetJSON(){
         isJSONDownloading = true
         if(hasInternetConnection()){
-            getJSON = GetJSON(WeakReference(this), "json")
+            getJSON = HttpAsyncTask(WeakReference(this), "json")
             getJSON!!.execute(URL)
         }else{
             displayNoInternetDialog()
@@ -134,7 +134,7 @@ class MainActivity : BaseNetworkActivity(){
                 val jsonObjectForm = JSONObject()
                 jsonObjectForm.put("form", jsonObject)
 
-                getJSON = GetJSON(WeakReference<Context>(this), "json", "POST",
+                getJSON = HttpAsyncTask(WeakReference<Context>(this), "json", "POST",
                         jsonObjectForm.toString())
                 getJSON!!.execute(POST_URL)
 

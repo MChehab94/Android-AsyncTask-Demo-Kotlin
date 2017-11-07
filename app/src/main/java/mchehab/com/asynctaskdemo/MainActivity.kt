@@ -15,8 +15,6 @@ import java.lang.ref.WeakReference
 import org.json.JSONException
 import org.json.JSONObject
 
-
-
 class MainActivity : BaseNetworkActivity(){
 
     lateinit var textView: TextView
@@ -26,7 +24,7 @@ class MainActivity : BaseNetworkActivity(){
     var getJSON: GetJSON? = null
     var asyncImageDownload: AsyncImageDownload? = null
 
-    val URL = "http://validate.jsontest.com/?json=%7B%22key%22:%22value%22%7D"
+    val URL = "http://httpbin.org/get"
     val IMAGE_URL = "https://www.w3schools.com/html/workplace.jpg"
     val POST_URL = "https://httpbin.org/post"
 
@@ -55,14 +53,6 @@ class MainActivity : BaseNetworkActivity(){
             textView.text = jsonResult
 
             isJSONDownloading = false
-        }
-    }
-
-    val broadcastReceiverPost = object: BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val bundle = intent?.extras
-            val result = bundle?.getString("json")
-            textView.text = result
             isJSONPosting = false
         }
     }
@@ -83,15 +73,12 @@ class MainActivity : BaseNetworkActivity(){
                 IntentFilter("json"))
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverImage,
                 IntentFilter("image"))
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPost,
-                IntentFilter("post json"))
     }
 
     override fun onPause() {
         super.onPause()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiverJSON)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiverImage)
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiverPost)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,8 +134,9 @@ class MainActivity : BaseNetworkActivity(){
                 val jsonObjectForm = JSONObject()
                 jsonObjectForm.put("form", jsonObject)
 
-                AsyncTaskPost(WeakReference(this), jsonObjectForm.toString(),
-                        "post json").execute(POST_URL)
+                getJSON = GetJSON(WeakReference<Context>(this), "json", "POST",
+                        jsonObjectForm.toString())
+                getJSON!!.execute(POST_URL)
 
             } catch (jsonException: JSONException) {
                 jsonException.printStackTrace()
